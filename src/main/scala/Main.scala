@@ -10,7 +10,7 @@ object Main {
   def main(args: Array[String]): Unit = {
     println(Just(msg))
     println(equal(1, 1))
-    println(liftEqual(Just(1), Nothing))
+    println(equal1(Just(1), Nothing))
     println(minList(Just(3), Nothing, Just(2)))
     println(minList(5, 3, 1))
   }

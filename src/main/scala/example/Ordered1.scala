@@ -1,13 +1,10 @@
 package example
 
 object Ordered1 {
-  type Derive =
-    [F[_], A, B] => implicit (Equatable[A], Ordered[A], Ordered1[F]) => B
-
-  implicit def liftCompare[F[_], A]: (F[A], F[A]) => Derive[F, A, Ordering] =
-    implicitly[Ordered1[F]].liftCompare(_, _)
+  def compare1[F[_], A](fa1: F[A], fa2: F[A]): implicit (Equatable[A], Ordered[A], Ordered1[F]) => Ordering =
+    implicitly[Ordered1[F]].compare1(fa1, fa2)
 }
 
 trait Ordered1[F[_]] {
-  def liftCompare[A](ord1: F[A], ord2: F[A]): implicit (Ordered[A], Equatable[A]) => Ordering
+  def compare1[A](fa1: F[A], fa2: F[A]): implicit (Ordered[A], Equatable[A]) => Ordering
 }

@@ -1,10 +1,10 @@
 package example
 
 object Equatable {
-  type Derive[A, O] = implicit Equatable[A] => O
-  def equal[A]: (A, A) => Derive[A, Boolean] = implicitly[Equatable[A]].equal(_, _)
+  def equal[A](a1: A, a2: A): implicit Equatable[A] => Boolean =
+    implicitly[Equatable[A]].equal(a1, a2)
 }
 
 trait Equatable[A] {
-  def equal(value1: A, value2: A): Boolean
+  def equal(a1: A, a2: A): Boolean
 }

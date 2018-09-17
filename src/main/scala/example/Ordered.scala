@@ -1,15 +1,12 @@
 package example
 
 object Ordered {
-  type Derive =
-    [A, B] => implicit (Equatable[A], Ordered[A]) => B
-
-  implicit def compare[A]: (A, A) => Derive[A, Ordering] =
-    implicitly[Ordered[A]].compare(_, _)
+  def compare[A](a1: A, a2: A): implicit (Equatable[A], Ordered[A]) => Ordering =
+    implicitly[Ordered[A]].compare(a1, a2)
 }
 
 trait Ordered[A] {
-  def compare(ord1: A, ord2: A): implicit Equatable[A] => Ordering
+  def compare(a1: A, a2: A): implicit Equatable[A] => Ordering
 }
 
 enum Ordering {
