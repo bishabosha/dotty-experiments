@@ -8,3 +8,9 @@ object Equatable {
 trait Equatable[A] {
   def equal(a1: A, a2: A): Boolean
 }
+
+object Equatables {
+  implicit object EquatableInt extends Equatable[Int] {
+    override def equal(i1: Int, i2: Int): Boolean = i1 == i2
+  }
+}

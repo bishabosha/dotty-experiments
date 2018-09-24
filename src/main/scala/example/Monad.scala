@@ -20,7 +20,7 @@ object Monad {
     Monad[M].<<(ma)(mb)
 }
 
-trait Monad[M[_] : Applicative] {
+trait Monad[M[_]: Applicative] {
   def >>=[A, B](ma: M[A])(amb: A => M[B]): M[B]
   def >>[A, B](ma: M[A])(mb: M[B]): M[B] = mb
   def <<[A, B](ma: M[A])(mb: M[B]): M[A] = ma
@@ -28,7 +28,7 @@ trait Monad[M[_] : Applicative] {
 
 object MonadOps {
   def liftM[F[_]: Functor, A, B](f: A => B): F[A] => F[B] =
-    map(_)(f)
+    fmap(_)(f)
     
   def liftM2[M[_]: Monad: Functor, A, B, C](f: (A, B) => C): (M[A], M[B]) => M[C] =
     for {
@@ -39,18 +39,30 @@ object MonadOps {
 
 object MonadSyntax {
   implicit class Bind[M[_]: Monad, A](`this`: M[A]){
-    def >>=[B](f: A => M[B]): M[B] = (Monad[M] >>= `this`)(f)
+    def >>=[B](f: A => M[B]): M[B] = Monad.>>=(`this`)(f)
   }
 
   implicit class FlatMap[M[_]: Monad, A](`this`: M[A]){
-    def flatMap[B](f: A => M[B]): M[B] = (Monad[M] >>= `this`)(f)
+    def flatMap[B](f: A => M[B]): M[B] = Monad.>>=(`this`)(f)
   }
 
   implicit class RightShift[M[_]: Monad, A](`this`: M[A]){
-    def >>[B](mb: M[B]): M[B] = (Monad[M] >> `this`)(mb)
+    def >>[B](mb: M[B]): M[B] = Monad.>>(`this`)(mb)
   }
 
   implicit class LeftShift[M[_]: Monad, A](`this`: M[A]){
-    def <<[B](mb: M[B]): M[A] = (Monad[M] << `this`)(mb)
+    def <<[B](mb: M[B]): M[A] = Monad.<<(`this`)(mb)
+  }
+}
+
+import Maybe._
+import Applicatives._
+object Monads {
+  implicit object MonadMaybe extends Monad[Maybe]() {
+    override def >>=[A, B](ma: Maybe[A])(f: A => Maybe[B]) =
+      ma match {
+        case Just(a) => f(a)
+        case Nothing => Nothing
+      }
   }
 }

@@ -15,3 +15,13 @@ trait Ordered[A: Equatable] {
 enum Ordering {
   case EQ, LT, GT
 }
+
+import Equatable._
+import Equatables._
+import Ordering._
+object Ordereds {
+  implicit object OrderedInt extends Ordered[Int]() {
+    override def compare(value1: Int, value2: Int) =
+      if (equal(value1, value2)) EQ else if (value1 < value2) LT else GT
+  }
+}

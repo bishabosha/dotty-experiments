@@ -1,6 +1,10 @@
 import example.Maybe._
-import example.IntOps._
-import example.MaybeOps._
+import example.Functors._
+import example.Monads._
+import example.Equatables._
+import example.Equatable1s._
+import example.Ordereds._
+import example.Ordered1s._
 import example.Equatable._
 import example.Equatable1._
 import example.minList

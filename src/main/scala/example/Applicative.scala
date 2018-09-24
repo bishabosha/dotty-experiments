@@ -19,6 +19,23 @@ trait Applicative[F[_]: Functor] {
 import Applicative._
 object ApplicativeSyntax {
   implicit class Apply[F[_]: Applicative, A](`this`: F[A]){
-    def <*>[B](fab: F[A => B]): F[B] = (Applicative[F] <*> `this`)(fab)
+    def <*>[B](fab: F[A => B]): F[B] = Applicative.<*>(`this`)(fab)
+  }
+}
+
+import Maybe._
+import Functor._
+import Functors._
+object Applicatives {
+
+  implicit object MaybeApplicative extends Applicative[Maybe]() {
+    override def pure[A](a: A): Maybe[A] =
+      Just(a)
+
+    override def <*>[A, B](ma: Maybe[A])(mf: Maybe[A => B]) =
+      mf match {
+        case Just(f) => fmap(ma)(f)
+        case Nothing => Nothing
+      }
   }
 }
