@@ -1,4 +1,9 @@
-## sbt project compiled with Dotty
+## Experimental FP library made in Dotty
+
+using
+* Extension Methods
+* Trait parameters
+* enum
 
 ### Usage
 
