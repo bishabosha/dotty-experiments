@@ -1,23 +1,17 @@
 import example.Maybe._
-import example.Functors._
-import example.Monads._
-import example.Equatables._
-import example.Equatable1s._
-import example.Ordereds._
-import example.Ordered1s._
 import example.Equatable._
 import example.Equatable1._
-import example.minList
 import example.MonadSyntax._
 import example.MonadOps._
 import example.FunctorSyntax._
+import example.{Applicative, minList}
 
 object Main {
 
   def main(args: Array[String]): Unit = {
-    println(Just(msg))
-    println(equal(1, 1))
-    println(equal1(Just(1), Nothing))
+    println(Applicative.pure(msg))
+    println(1 equal 1)
+    println(Just(1) equal Nothing)
     println(minList(Just(3), Nothing, Just(2)))
     println(minList(5, 3, 1))
 
@@ -38,5 +32,5 @@ object Main {
     println(sumIt(Just(12), Just(13)))
   }
 
-  def msg = "I was compiled by dotty :)"
+  def msg = "I was compiled by dotty!"
 }
