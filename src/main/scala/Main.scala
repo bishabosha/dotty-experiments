@@ -1,4 +1,5 @@
 import example.Maybe._
+import example.Maybe
 import example.Equatable._
 import example.Equatable1._
 import example.MonadSyntax._
