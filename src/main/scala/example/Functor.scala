@@ -6,17 +6,17 @@ trait Functor[F[_]] {
 
 object Functor {
 
-  implicit val MaybeFunctor: Functor[Maybe] = new {
+  import Safety._
+
+  implied for Functor[Maybe] {
     import Maybe._
-    override def (fa: Maybe[A]) fmap[A, B](f: A => B) = fa match {
-      case Just(a) => Just(f(a))
-      case Nothing => Nothing
-    }
+    def (fa: Maybe[A]) fmap[A, B](f: A => B) =
+      fa.fold(zero)(a => Maybe(f(a)))
   }
 }
 
 import Functor._
 object FunctorSyntax {
-  def (fa: F[A]) map[F[_]: Functor, A, B](f: A => B): F[B] = fa fmap f
-  def (fa: F[A]) foreach[F[_]: Functor, A](f: A => Unit): Unit = fa fmap f
+  inline def (fa: F[A]) map[F[_]: Functor, A, B](f: A => B): F[B] = fa fmap f
+  inline def (fa: F[A]) foreach[F[_]: Functor, A](f: A => Unit): Unit = fa fmap f
 }

@@ -1,29 +1,31 @@
 package example
 
 trait Monad[M[_]: Applicative] {
-  def (ma: M[A])    >>= [A, B](amb: A => M[B]): M[B]
-  def (ma: => M[A]) >>  [A, B](mb: M[B]): M[B]    = mb
-  def (ma: M[A])    <<  [A, B](mb: => M[B]): M[A] = ma
+  def (ma: M[A])        >>= [A, B](amb: A => M[B]): M[B]
+  inline def (ma: M[A]) >>  [A, B](mb: M[B]): M[B] = ma >>= (_ => mb)
+  inline def (ma: M[A]) <<  [A, B](mb: M[B]): M[A] = mb >>= (_ => ma)
 }
 
 object Monad {
-  
-  implicit val MonadMaybe: Monad[Maybe] = new {
+
+  import Safety._
+
+  implied for Monad[Maybe] {
     import Maybe._
 
-    override def (ma: Maybe[A]) >>=[A, B](f: A => Maybe[B]) = ma match {
-      case Just(a) => f(a)
-      case Nothing => Nothing
-    }
+    def (ma: Maybe[A]) >>=[A, B](f: A => Maybe[B]) =
+      ma.fold(zero)(f)
   }
 }
 
 object MonadOps {
+
+  import MonadSyntax._
+  import FunctorSyntax._
+  
   def liftM[F[_]: Functor, A, B](f: A => B): F[A] => F[B] =
     _ fmap f
     
-  import MonadSyntax._
-  import FunctorSyntax._
   def liftM2[M[_]: Monad: Functor, A, B, C]
     (f: (A, B) => C): (M[A], M[B]) => M[C] =
       for {
@@ -33,5 +35,5 @@ object MonadOps {
 }
 
 object MonadSyntax {
-  def (ma: M[A]) flatMap[M[_]: Monad, A, B] (f: A => M[B]): M[B] = ma >>= f
+  inline def (ma: M[A]) flatMap[M[_]: Monad, A, B] (f: A => M[B]): M[B] = ma >>= f
 }

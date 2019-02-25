@@ -5,7 +5,7 @@ trait Equatable[A] {
 }
 
 object Equatable {
-  implicit val EquatableInt: Equatable[Int] = new {
-    override def (i1: Int) equal (i2: Int): Boolean = i1 == i2
+  implied for Equatable[Int] {
+    def (i1: Int) equal (i2: Int): Boolean = i1 == i2
   }
 }

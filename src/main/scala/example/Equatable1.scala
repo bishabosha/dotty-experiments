@@ -5,17 +5,12 @@ trait Equatable1[F[_]] {
 }
 
 object Equatable1 {
+  import Safety._
   import Maybe._
   import Equatable._
 
-  implicit val Equatable1Maybe: Equatable1[Maybe] = new {
-    override def (m1: Maybe[A]) equal[A: Equatable](m2: Maybe[A]) =
-      m1 match {
-        case Just(a) => m2 match {
-          case Just(b) => a equal b
-          case Nothing => false
-        }
-        case Nothing => Nothing == m2
-      }
+  implied for Equatable1[Maybe] {
+    def (m1: Maybe[A]) equal[A: Equatable](m2: Maybe[A]) =
+      m1.fold(m2.fold(true)(_ => false))(x => m2.fold(false)(x equal _))
   }
 }

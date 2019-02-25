@@ -9,11 +9,12 @@ enum Ordering {
 }
 
 object Ordered {
-  import Equatable._
+
+  import implied Equatable._
   import Ordering._
 
-  implicit val OrderedInt: Ordered[Int] = new {
-    override def (value1: Int) compare(value2: Int) =
+  implied for Ordered[Int] {
+    def (value1: Int) compare(value2: Int) =
       if value1 equal value2 then
         EQ
       else if value1 < value2 then

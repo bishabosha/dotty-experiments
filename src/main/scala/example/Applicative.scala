@@ -6,18 +6,17 @@ trait Applicative[F[_]: Functor] {
 }
 
 object Applicative {
-  import Functor._
 
-  implicit val MaybeApplicative: Applicative[Maybe] = new {
+  import implied Functor._
+  import Safety._
+
+  implied for Applicative[Maybe] {
+
     import Maybe._
 
-    override def (f: Applicative.type) pure[A](a: A): Maybe[A] =
-      Just(a)
+    def (f: Applicative.type) pure[A](a: A) = Maybe(a)
 
-    override def (ma: Maybe[A]) <*>[A, B](mf: Maybe[A => B]) =
-      mf match {
-        case Just(f) => ma fmap f
-        case Nothing => Nothing
-      }
+    def (ma: Maybe[A]) <*>[A, B](mf: Maybe[A => B]) =
+      mf.fold(zero)(f => ma fmap f)
   }
 }
