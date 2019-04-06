@@ -1,8 +1,8 @@
 import example._
 import Safety._
 import Maybe._
-import implied Equatable._
-import implied Equatable1._
+import implied Ordered._
+import implied Monad._
 import MonadSyntax._
 import MonadOps._
 import FunctorSyntax._
@@ -13,8 +13,8 @@ object Main {
     println(Applicative.pure(msg))
     println(1 equal 1)
     println(Maybe(1) equal zero)
-    println(minList(Maybe(3), zero, Maybe(2)))
-    println(minList(5, 3, 1))
+    println(minimum(Maybe(3), zero, Maybe(2)))
+    println(minimum(5, 3, 1))
 
     val sum = for {
       x <- Maybe.point(2)

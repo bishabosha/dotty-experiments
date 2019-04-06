@@ -1,0 +1,10 @@
+{
+  "dotty": {
+    "trace": {
+      "server": {
+        "format": "JSON",
+        "verbosity": "verbose"
+      }
+    }
+  }
+}
