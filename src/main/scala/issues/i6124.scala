@@ -6,11 +6,11 @@ type Box[A] = A
 
 trait Foo[A]
 
-implied [A] for Foo[A]
+given [A] as Foo[A]
 
 object OkTest {
   trait Ok[A: Foo] extends Foo[Box[A]] {}
-  implied [A] given Foo[A] for Ok[A]
+  given [A] as Ok[A] given Foo[A] 
 
   def test: Unit = {
     println(the[Ok[Box[Unit]]])
@@ -19,7 +19,7 @@ object OkTest {
 
 object OkTest2 {
   trait Ok[A] given (f: Foo[A]) extends Foo[Box[A]] {}
-  implied [A] given Foo[A] for Ok[A]
+  given [A] as Ok[A] given Foo[A]
 
   def test: Unit = {
     println(the[Ok[Box[Unit]]])
@@ -28,7 +28,7 @@ object OkTest2 {
 
 object BadTest {
   trait Bad[A] given Foo[A] extends Foo[Box[A]] {}
-  implied [A] given Foo[A] for Bad[A]
+  given [A] as Bad[A] given Foo[A]
 
   def test: Unit = {
     println(the[Bad[Box[Unit]]])
