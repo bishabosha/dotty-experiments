@@ -4,7 +4,7 @@ package tasty
  */
 trait TASTYFlags { self =>
   type TASTYFlagSet
-  type SetOf[_ <: TASTYFlagSet]
+  type Set[_]
 
   val EmptyTASTYFlagSet: TASTYFlagSet
   val Erased: TASTYFlagSet
@@ -18,7 +18,7 @@ trait TASTYFlags { self =>
   val Exported: TASTYFlagSet
 
   given (flagset: TASTYFlagSet) {
-    final def project: SetOf[TASTYFlagSet]         = self.toSetOfSingletonOrEmpty(flagset)
+    final def project: Set[TASTYFlagSet]           = self.toSetOfSingletonOrEmpty(flagset)
     final def |(other: TASTYFlagSet): TASTYFlagSet = self.union(flagset, other)
     final def is(mask: TASTYFlagSet): Boolean      = self.is(flagset, mask)
     final def equal(set: TASTYFlagSet): Boolean    = self.equal(flagset, set)
@@ -31,7 +31,7 @@ trait TASTYFlags { self =>
     final def is(mask: TASTYFlagSet, butNot: TASTYFlagSet): Boolean = self.is(flagset, mask, butNot)
   }
 
-  given (flagsets: SetOf[TASTYFlagSet]) {
+  given (flagsets: Set[TASTYFlagSet]) {
     final def map[A](f: TASTYFlagSet => A): Iterable[A] = self.map(flagsets, f)
   }
 
@@ -49,8 +49,8 @@ trait TASTYFlags { self =>
     case sets                         => map(toSetOfSingletonOrEmpty(sets), show).mkString(" | ")
   }
 
-  protected def toSetOfSingletonOrEmpty(multiset: TASTYFlagSet): SetOf[TASTYFlagSet]
-  protected def map[A](set: SetOf[TASTYFlagSet], f: TASTYFlagSet => A): Iterable[A]
+  protected def toSetOfSingletonOrEmpty(multiset: TASTYFlagSet): Set[TASTYFlagSet]
+  protected def map[A](set: Set[TASTYFlagSet], f: TASTYFlagSet => A): Iterable[A]
   protected def union(as: TASTYFlagSet, bs: TASTYFlagSet): TASTYFlagSet
   protected def is(set: TASTYFlagSet, mask: TASTYFlagSet, butNot: TASTYFlagSet): Boolean
   protected def is(set: TASTYFlagSet, mask: TASTYFlagSet): Boolean
@@ -61,10 +61,10 @@ trait TASTYFlags { self =>
 }
 
 object TASTYFlags {
-  val Live: TASTYFlags = new TASTYFlags {
+  val Live: TASTYFlags = new {
 
     type TASTYFlagSet = Int
-    type SetOf[X <: TASTYFlagSet] = X
+    type Set[X] = X
 
     val EmptyTASTYFlagSet = 0
     val Erased            = 1 << 0
@@ -87,9 +87,9 @@ object TASTYFlags {
     final def is(set: TASTYFlagSet, mask: TASTYFlagSet, butNot: TASTYFlagSet): Boolean =
       ((set & mask) != 0) && ((set & butNot) == 0)
 
-    final def toSetOfSingletonOrEmpty(set: TASTYFlagSet): SetOf[TASTYFlagSet] = set
+    final def toSetOfSingletonOrEmpty(set: TASTYFlagSet): Set[TASTYFlagSet] = set
 
-    final def map[A](set: SetOf[TASTYFlagSet], f: TASTYFlagSet => A) = {
+    final def map[A](set: Set[TASTYFlagSet], f: TASTYFlagSet => A) = {
       val buf = Iterable.newBuilder[A]
       var i = 0
       while (i <= 8) {

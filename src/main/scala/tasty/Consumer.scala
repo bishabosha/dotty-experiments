@@ -1,10 +1,10 @@
 package tasty
 
-abstract class Consumer extends TASTYFlagSets {
-  import tastyFlags._
-  import given tastyFlags._
+object Consumer {
+  import TASTYFlags.Live._
+  import given TASTYFlags.Live._
 
-  lazy val flagset: TASTYFlagSet = Inline | Opaque | Exported
+  val flagset: TASTYFlagSet = Inline | Opaque | Exported
 
-  lazy val str = flagset.show
+  val str = flagset.show
 }
